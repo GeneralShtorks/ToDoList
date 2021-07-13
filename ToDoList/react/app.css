@@ -1,0 +1,17 @@
+.header h1, hr {
+    margin: 0px;
+    padding: 0px;
+}
+
+.header a {
+    text-decoration: none;
+    float: left;
+}
+
+#header-h1 {
+    display: inline-block;
+}
+
+#header-link-main-page {
+    display: inline-block;
+}

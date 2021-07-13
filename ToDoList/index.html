@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>Test</title>
+        <link href="todo.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div class='header'>
+            <h1> To Do List</h1>
+        </div>
+        <hr class='horizontal-line' noshade>
+        
+        <main>
+            <div class='to-do-list'>
+                <div class='field-for-enter'>
+                  <div class='input'>
+                    <input type='text' name='input' id='input' placeholder='write your task'>
+                  </div>
+                  <div class='select-grade'>
+                      <select id='select-grade'>
+                          <option>not urgent</option>
+                          <option>medium urgent</option>
+                          <option>urgent</option>
+                      </select>
+                  </div>
+                  <div class='button'>
+                      <input type="button" name="sumbit" id='button' value="create" onclick="addTaskController()">
+                  </div>
+                </div>
+                
+                <div class='task-list' id='list'>
+                </div>
+            </div>
+        </main>
+
+        <a href='test.html'>test page</a>
+        <a href='/react/'>test react</a>
+        <br>
+     
+        <span id='test-size'>Hello</span>
+
+
+        <script src='model.js'></script>
+    </body>
+</html>
