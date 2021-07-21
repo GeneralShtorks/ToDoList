@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Chat</title>
+        <link href="./css/chat.css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>Chat</h1>
+        </header>
+        <main>
+            <script>
+                async function sendUsernameToBackend()
+                {
+                    // username = document.getElementById('username').value;
+                    const data = { 'username': document.getElementById('username').value }
+                    const response = await fetch(
+                        'backend/users/add.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(data),
+                            // headers: {
+                            //     'Content-type': 'application/json'
+                            // }
+                        }
+                        );
+                    const jsonResponse = await response.json();
+                    console.log(jsonResponse.message);
+                    console.log(jsonResponse);
+                }
+            </script>
+            <div>
+                <input type='text' id='username' placeholder='enter login'>
+                <button onclick='sendUsernameToBackend()'>enter</button>
+            </div>
+            
+        </main>
+    </body>
+</html>

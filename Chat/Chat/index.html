@@ -1,0 +1,202 @@
+<html>
+    <head>
+        <title>Chat</title>
+        <link href="./css/chat.css" rel="stylesheet">
+    </head>
+    <body>
+        <header>
+            <h1>Chat</h1>
+        </header>
+        <main>
+            <script>
+                async function sendUsernameToBackend()
+                {
+                    const dataUser = { 'username': document.getElementById('username').value }
+                    const response = await fetch(
+                        'backend/users/add.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(dataUser),
+                            headers: {
+                                'Content-type': 'application/json'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                        const dataFromBackend = await response.json();
+                        document.getElementById('res-add-user').value = `Пользователь успешно создан. ID = ${dataFromBackend.id}`;    
+                        document.getElementById('username').value = '';
+                    } else {
+                        document.getElementById('res-add-user').value = "Пользователь с таким именем уже существует!";    
+                    }
+                }
+            </script>
+            <div class='api-method'>
+                <h4>Добавить нового пользователя</h4>
+                <label>Введите имя пользователя:<input type='text' id='username' placeholder='enter login'></label>
+                <br />
+                <button onclick='sendUsernameToBackend()'>enter</button>
+                <br />
+                <textarea id='res-add-user'></textarea>
+            </div>
+            
+            <script>
+                async function sendChatToBackend()
+                {
+                    const dataChat = {};
+                    dataChat['chat'] = document.getElementById('chat').value;
+                    dataChat['usernames'] = document.getElementById('usernames').value.split(', ');
+                    console.log(dataChat);
+                    const response = await fetch(
+                        'backend/chats/add.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(dataChat),
+                            headers: {
+                                'Content-type': 'application/json'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                        const dataFromBackend = await response.json();
+                        document.getElementById('res-add-chat').value = `Чат успешно создан. ID = ${dataFromBackend.id}`;    
+                        document.getElementById('chat').value = '';
+                        document.getElementById('usernames').value = '';
+                        
+                    } else {
+                        document.getElementById('res-add-chat').value = "Чат с таким названием уже существует или указаны несуществующие пользователи";
+                    } 
+                }
+            </script>
+            <div class='api-method'>
+                <h4>Создать новый чат между пользователями (Список пользователей вводить через ", "(запятая и пробел))</h4>
+                <label>Введите название чата:<input type='text' id='chat' placeholder='enter chat'></label>
+                <br />
+                <label>Введите имена пользователей:<input type='text' id='usernames' placeholder='enter usernames'></label>
+                <br />
+                <button onclick='sendChatToBackend()'>enter</button>
+                <br />
+                <textarea id='res-add-chat'></textarea>
+            </div>
+            
+            <script>
+                async function sendMessageToBackend()
+                {
+                    const dataMessage = {};
+                    dataMessage['userId'] = document.getElementById('userId').value;
+                    dataMessage['chatId'] = document.getElementById('chatId').value;
+                    dataMessage['text'] = document.getElementById('text').value;
+                    const response = await fetch(
+                        'backend/messages/add.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(dataMessage),
+                            headers: {
+                                'Content-type': 'application/json'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                        const dataFromBackend = await response.json();
+                        document.getElementById('res-add-message').value = `Сообщение успешно отправлено. ID = ${dataFromBackend.id}`;    
+                        document.getElementById('userId').value = '';
+                        document.getElementById('chatId').value = '';
+                        document.getElementById('text').value = '';
+                        
+                    } else {
+                        document.getElementById('res-add-message').value = "Данного пользователя или чата не существует или пользователь не состоит в данном чате";
+                    } 
+                }
+            </script>
+            <div class='api-method'>
+                <h4>Отправить сообщение в чат от лица пользователя</h4>
+                <label>Введите id чата:<input type='number' id='chatId' placeholder='enter chat id'></label>
+                <br />
+                <label>Введите id пользователя:<input type='number' id='userId' placeholder='enter user id'></label>
+                <br />
+                <label>Введите текст сообщения:<input type='text' id='text' placeholder='enter text'></label>
+                <br />
+                <button onclick='sendMessageToBackend()'>enter</button>
+                <br />
+                <textarea id='res-add-message'></textarea>
+            </div>
+            
+            
+            <script>
+                async function getChatsFromBackend()
+                {
+                    const dataUser = {'userId': document.getElementById('userIdForGetChats').value};
+                    const response = await fetch(
+                        'backend/chats/get.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(dataUser),
+                            headers: {
+                                'Content-type': 'application/json'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                        const dataFromBackend = await response.json();
+                        console.log(dataFromBackend);
+                        let result = '';
+                        dataFromBackend.forEach(function(value) {
+                            result += `id:${value.id}|name:${value.name}|created_at:${value.created_at}` + "\n";
+                        });
+                        document.getElementById('res-get-chats').value = result;    
+                        document.getElementById('userIdForGetChats').value = '';
+                    } else {
+                        document.getElementById('res-get-chats').value = "Данного пользователя не существует";
+                    } 
+                }
+            </script>
+            <div class='api-method'>
+                <h4>Получить список чатов конкретного пользователя</h4>
+                <label>Введите id пользователя:<input type='number' id='userIdForGetChats' placeholder='enter user id'></label>
+                <br />
+                <button onclick='getChatsFromBackend()'>enter</button>
+                <br />
+                <textarea id='res-get-chats'></textarea>
+            </div>
+            
+            <script>
+                async function getMessageFromBackend()
+                {
+                    const dataChat = {'chatId': document.getElementById('chatIdForGetMessage').value};
+                    const response = await fetch(
+                        'backend/messages/get.php',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify(dataChat),
+                            headers: {
+                                'Content-type': 'application/json'
+                            }
+                        }
+                    );
+                    if (response.ok) {
+                        const dataFromBackend = await response.json();
+                        console.log(dataFromBackend);
+                        let result = '';
+                        dataFromBackend.forEach(function(value) {
+                            result += `id:${value.id}|chat:${value.chat}|author:${value.author}|text:${value.text}|created_at:${value.created_at}` + "\n";
+                        });
+                        document.getElementById('res-get-message').value = result;    
+                        document.getElementById('chatIdForGetMessage').value = '';
+
+                        
+                    } else {
+                        document.getElementById('res-get-message').value = "Данного чата не существует или сообщения пока отсутствуют";
+                    } 
+                }
+            </script>
+            <div class='api-method'>
+                <h4>Получить список сообщений в конкретном чате (Ответ от сервера также можно посмотреть в консоли в браузере)</h4>
+                <label>Введите id чата:<input type='number' id='chatIdForGetMessage' placeholder='enter chat id'></label>
+                <br />
+                <button onclick='getMessageFromBackend()'>enter</button>
+                <br />
+                <textarea id='res-get-message'></textarea>
+            </div>
+        </main>
+    </body>
+</html>
